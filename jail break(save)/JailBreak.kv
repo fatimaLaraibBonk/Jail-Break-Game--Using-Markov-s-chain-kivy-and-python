@@ -1,0 +1,542 @@
+#:kivy 2.3.1
+ScreenManager:
+    HomeScreen:
+        name: "home"
+    HowToPlayScreen:
+        name: "howToPlay"
+    GameScreen:
+        name: "game"
+    PauseScreen:
+        name: "pause"
+    CreditsScreen:
+        name: "credits"
+    LostScreen:
+        name: "lost"
+    WinScreen:
+        name: "won"
+    HeatmapScreen:
+        name: "heatmap"
+<HeatmapScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 10
+        spacing: 10
+        
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1  # white bg
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "Heat Map"
+            font_size: 100
+            font_name: "MightySouly-lxggD.ttf"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: 120  # match the large font
+
+
+        GridLayout:
+            id: heatmap_grid
+            cols: root.grid_size
+            spacing: 2
+            size_hint_y: 0.9
+
+        Button:
+            text: "Back To Game"
+            font_name: "MightySouly-lxggD.ttf"
+            font_size: 22
+            size_hint_y: None
+            height: 60
+            background_normal: ""
+            background_color: 1, 0.7, 0.8, 1
+            color: 0, 0, 0, 1
+            on_release: app.root.current = "game"
+
+
+<HomeScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 40
+
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1  # white bg
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "Jail Break"
+            font_size: 100
+            font_name: "MightySouly-lxggD.ttf"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: 120  # match the large font
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 25
+            size_hint: None, None
+            size: 300, self.minimum_height  # compact width
+            pos_hint: {"center_x": 0.5}  # center it horizontally
+
+            Button:
+                text: "Start"
+                font_name: "MightySouly-lxggD.ttf"
+                font_size: 22
+                size_hint_y: None
+                height: 60
+                background_normal: ""
+                background_color: 1, 0.7, 0.8, 1
+                color: 0, 0, 0, 1
+                on_release: app.root.current="game"
+
+            Button:
+                text: "Credits"
+                font_name: "MightySouly-lxggD.ttf"
+                font_size: 22
+                size_hint_y: None
+                height: 60
+                background_normal: ""
+                background_color: 1, 0.7, 0.8, 1
+                color: 0, 0, 0, 1
+                on_release: app.root.current="credits"
+
+            Button:
+                text: "How To Play"
+                font_name: "MightySouly-lxggD.ttf"
+                font_size: 22
+                size_hint_y: None
+                height: 60
+                background_normal: ""
+                background_color: 1, 0.7, 0.8, 1
+                color: 0, 0, 0, 1
+                on_release: app.root.current="howToPlay"
+
+            Button:
+                text: "Quit"
+                font_name: "MightySouly-lxggD.ttf"
+                font_size: 22
+                size_hint_y: None
+                height: 60
+                background_normal: ""
+                background_color: 1, 0.7, 0.8, 1
+                color: 0, 0, 0, 1
+                on_release: app.stop()
+
+
+        Widget:  # Spacer if needed
+            size_hint_y: 1
+
+<GameScreen>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1  # white background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        Button:
+            id: pause_button
+            text: "Pause"
+            font_size: '16sp'
+            font_name: "MightySouly-lxggD.ttf"
+            background_color: 1, 0.7, 0.8, 1  # pink bg
+            background_normal: ""
+            color: 0, 0, 0, 1  # black pause icon
+            size_hint: None, None
+            size: dp(50), dp(50)
+            pos_hint: {"right": 0.98, "top": 0.98}
+            on_press: root.pause_game()
+        Button:
+            id: HEATMAP_button
+            text: "Heatmap"
+            font_size: '16sp'
+            font_name: "MightySouly-lxggD.ttf"
+            background_color: 1, 0.7, 0.8, 1  # pink bg
+            background_normal: ""
+            color: 0, 0, 0, 1  # black pause icon
+            size_hint: None, None
+            size: dp(50), dp(50)
+            pos_hint: {"right": 0.90, "top": 0.98}
+            on_press: 
+                root.pause_game()
+                root.open_heatmap()
+        Label:
+            id: timer_label
+            text: ""
+            size_hint: None, None
+            size: dp(100), dp(40)
+            pos_hint: {"center_x": 0.5, "top": 0.98}
+            color: 1, 1, 1, 1  # white text
+            font_name: "MightySouly-lxggD.ttf"
+            font_size: '20sp'
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 1  # black background
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        GridLayout:
+            id: game_grid
+            cols: 5
+            rows: 5
+            spacing: dp(2)
+            padding: dp(2)
+            size_hint: None, None
+            size: dp(300), dp(300)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 1  # black base grid
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 0.95, None
+            height: dp(100)
+            pos_hint: {"center_x": 0.5, "y": 0.02}
+            padding: dp(10)
+            canvas.before:
+                Color:
+                    rgba: 1, 0.7, 0.8, 1  # pink
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                text: "Use the heat map to prevent the AI from making correct predictions."
+                color: 0, 0, 0, 1  # black text
+                font_name: "MightySouly-lxggD.ttf"
+                font_size: '18sp'
+                text_size: self.width - dp(20), None
+                halign: "left"
+                valign: "middle"
+<PauseScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 40
+
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1  # white bg
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "Game Paused"
+            font_size: 100
+            font_name: "MightySouly-lxggD.ttf"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: 120  # match the large font
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 25
+            size_hint: None, None
+            size: 300, self.minimum_height  # compact width
+            pos_hint: {"center_x": 0.5}  # center it horizontally
+
+            Button:
+                text: "Back To Game"
+                font_name: "MightySouly-lxggD.ttf"
+                font_size: 22
+                size_hint_y: None
+                height: 60
+                background_normal: ""
+                background_color: 1, 0.7, 0.8, 1
+                color: 0, 0, 0, 1
+                on_release: app.root.current = "game"
+
+            Button:
+                text: "Quit"
+                font_name: "MightySouly-lxggD.ttf"
+                font_size: 22
+                size_hint_y: None
+                height: 60
+                background_normal: ""
+                background_color: 1, 0.7, 0.8, 1
+                color: 0, 0, 0, 1
+                on_release: app.stop()
+
+        Widget:  # Spacer if needed
+            size_hint_y: 1
+
+<HowToPLayScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 40
+
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1  # full white screen
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "How To Play"
+            font_size: 100
+            font_name: "MightySouly-lxggD.ttf"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: 120
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 25
+            size_hint: None, None
+            size: 400, self.minimum_height
+            pos_hint: {"center_x": 0.5}
+
+            BoxLayout:
+                size_hint_y: None
+                height: 60
+
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.7, 0.8, 1  # pink bg
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                Label:
+                    text: "Reach the golden cell within time."
+                    font_name: "MightySouly-lxggD.ttf"
+                    font_size: 22
+                    color: 0, 0, 0, 1
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+
+            BoxLayout:
+                size_hint_y: None
+                height: 60
+
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.7, 0.8, 1  # pink bg
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                Label:
+                    text: "If the AI predicts your next 2 moves you lose."
+                    font_name: "MightySouly-lxggD.ttf"
+                    font_size: 22
+                    color: 0, 0, 0, 1
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+            BoxLayout:
+                size_hint_y: None
+                height: 60
+
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.7, 0.8, 1  # pink bg
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                Label:
+                    text: "You must reach within the time limit."
+                    font_name: "MightySouly-lxggD.ttf"
+                    font_size: 22
+                    color: 0, 0, 0, 1
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+
+
+            Button:
+                text: "< Back to main menu"
+                font_name: "MightySouly-lxggD.ttf"
+                font_size: 22
+                size_hint_y: None
+                height: 60
+                background_normal: ""
+                background_color: 0, 0, 0, 1
+                color: 1, 1, 1, 1
+                on_release: app.root.current = "home"
+
+        Widget:
+            size_hint_y: 1
+
+<CreditsScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 40
+
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1  # full white screen
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "Credits"
+            font_size: 100
+            font_name: "MightySouly-lxggD.ttf"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: 120
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 25
+            size_hint: None, None
+            size: 400, self.minimum_height
+            pos_hint: {"center_x": 0.5}
+
+            BoxLayout:
+                size_hint_y: None
+                height: 60
+
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.7, 0.8, 1  # pink bg
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                Label:
+                    text: "Made by Fatima Laraib"
+                    font_name: "MightySouly-lxggD.ttf"
+                    font_size: 22
+                    color: 0, 0, 0, 1
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+
+            BoxLayout:
+                size_hint_y: None
+                height: 60
+
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.7, 0.8, 1  # pink bg
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                Label:
+                    text: "Font by GraphicSauce"
+                    font_name: "MightySouly-lxggD.ttf"
+                    font_size: 22
+                    color: 0, 0, 0, 1
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+
+            Button:
+                text: "< Back to main menu"
+                font_name: "MightySouly-lxggD.ttf"
+                font_size: 22
+                size_hint_y: None
+                height: 60
+                background_normal: ""
+                background_color: 0, 0, 0, 1
+                color: 1, 1, 1, 1
+                on_release: app.root.current = "home"
+
+        Widget:
+            size_hint_y: 1
+<WinScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 40
+
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1  # full white screen
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "You win."
+            font_size: 100
+            font_name: "MightySouly-lxggD.ttf"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: 120
+
+        Button:
+            text: "Replay the game."
+            font_name: "MightySouly-lxggD.ttf"
+            font_size: 22
+            size_hint_y: None
+            height: 60
+            background_normal: ""
+            background_color: 0, 0, 0, 1
+            color: 1, 1, 1, 1
+            on_release: app.root.current = "game"
+        Button:
+            text: "Quit"
+            font_name: "MightySouly-lxggD.ttf"
+            font_size: 22
+            size_hint_y: None
+            height: 60
+            background_normal: ""
+            background_color: 1, 0.7, 0.8, 1
+            color: 0, 0, 0, 1
+            on_release: app.stop()
+        Widget:
+            size_hint_y: 1
+<LostScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 40
+
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1  # full white screen
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "You lost."
+            font_size: 100
+            font_name: "MightySouly-lxggD.ttf"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: 120
+
+        Button:
+            text: "Replay the game."
+            font_name: "MightySouly-lxggD.ttf"
+            font_size: 22
+            size_hint_y: None
+            height: 60
+            background_normal: ""
+            background_color: 0, 0, 0, 1
+            color: 1, 1, 1, 1
+            on_release: app.root.current = "game"
+        Button:
+            text: "Quit"
+            font_name: "MightySouly-lxggD.ttf"
+            font_size: 22
+            size_hint_y: None
+            height: 60
+            background_normal: ""
+            background_color: 1, 0.7, 0.8, 1
+            color: 0, 0, 0, 1
+            on_release: app.stop()
+        Widget:
+            size_hint_y: 1
